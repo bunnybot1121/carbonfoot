@@ -4,21 +4,21 @@
   "description": "EcoTrack - Track your carbon footprint automatically",
   "private": true,
   "scripts": {
-    "postinstall": "npm run install:server && npm run install:client && prisma generate --schema=server/prisma/schema.prisma",
+    "postinstall": "npm run install:server && npm run install:client && npx prisma generate --schema=server/prisma/schema.prisma",
     "install:server": "npm install --prefix server",
     "install:client": "npm install --prefix client",
-    "db:generate": "prisma generate --schema=server/prisma/schema.prisma",
-    "db:migrate": "prisma db push --schema=server/prisma/schema.prisma",
+    "db:generate": "npx prisma generate --schema=server/prisma/schema.prisma",
+    "db:migrate": "npx prisma db push --schema=server/prisma/schema.prisma",
     "db:seed": "node server/prisma/seed.js",
     "build": "npm run build --prefix client",
     "dev": "concurrently -n \"server,client\" -c \"cyan,magenta\" \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "test": "npm run test --prefix server"
   },
   "dependencies": {
-    "@prisma/client": "^5.14.0"
+    "@prisma/client": "^5.14.0",
+    "prisma": "^5.14.0"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2",
-    "prisma": "^5.14.0"
+    "concurrently": "^8.2.2"
   }
 }
