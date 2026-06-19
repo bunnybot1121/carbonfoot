@@ -1,36 +1,40 @@
 # EcoTrack - Zero-Effort Carbon Footprint Tracker
 
-EcoTrack helps individuals understand, track, and reduce their carbon footprint using a **zero manual typing** model. The only two user actions are granting location permission and uploading a receipt. 
+EcoTrack helps individuals understand, track, and reduce their carbon footprint using a **zero manual typing** model. The only user actions required are registering/logging in, selecting a region, and uploading a receipt.
 
-> **Core Flow:** Grant Location &rarr; Snap Receipt &rarr; Get Footprint (Zero Typing).
+> **Core Flow:** Register/Login &rarr; Grant Location/Region &rarr; Snap Receipt &rarr; Get Footprint (Zero Typing).
 
 ---
 
 ## 1. What It Does and Why
 
 Manual tracking of carbon footprints is tedious and prone to abandonment. EcoTrack eliminates data entry:
-1. **Onboarding**: Uses the **Browser Geolocation API** to fetch home coordinates, reverse-geocodes them via **OpenStreetMap Nominatim** to identify the user's country, and sets regional household emission factor averages.
-2. **Scanning**: Scans receipt photos via AI (Gemini, OpenAI, or Anthropic vision models) or fallback local OCR (Tesseract.js).
-3. **Calculations**: Geocodes the shop address, computes the travel distance from home, infers the transit mode, categorizes products, and computes the exact carbon footprint.
-4. **Actionable Feedback**: Provides editable chips for corrections (never required) and suggests ranked, quantified monthly savings based on actual data.
+1. **Secure Onboarding**: Provides standard registration/login and Google OAuth credentials authentication. Keeps user sessions active via JWT tokens stored in the browser's local storage.
+2. **Location & Region Calibration**: Uses the **Browser Geolocation API** (with a manual selector fallback if permission is denied) to calibrate the user's home coordinates and reverse-geocode country codes, setting regional electricity grid averages.
+3. **Bill Scanning**: Extracts text from receipt photos using AI (Gemini, OpenAI, or Anthropic vision models) or fallback local OCR (Tesseract.js) running offline.
+4. **Footprint Calculation**: Geocodes the shop address, computes travel distance from home, infers transit mode, categorizes products, and calculates the exact carbon footprint.
+5. **Actionable Feedback**: Provides editable chips for user corrections and suggests ranked, quantified monthly savings based on actual transaction patterns.
 
 ---
 
 ## 2. Architecture Overview
 
-EcoTrack is structured as a Monorepo split between `/client` and `/server`:
+EcoTrack is structured as a Monorepo split between `/client` (Vite frontend) and `/server` (Express backend), compiled and optimized for serverless deployments on **Vercel** with a remote **PostgreSQL** database.
 
 ```mermaid
 graph TD
     subgraph Client [React + Vite + Tailwind CSS]
-        UI[App.jsx] --> Onboard[Onboarding.jsx]
-        UI --> Scanner[BillScanner.jsx]
-        UI --> Dash[CarbonDashboard.jsx]
-        UI --> Goals[GoalTracker.jsx]
+        UI[App.jsx] --> Auth[components/Auth.jsx]
+        UI --> Onboard[components/Onboarding.jsx]
+        UI --> Scanner[components/BillScanner.jsx]
+        UI --> Dash[components/CarbonDashboard.jsx]
+        UI --> Goals[components/GoalTracker.jsx]
     end
 
-    subgraph Server [Node.js + Express + Prisma + SQLite]
-        Router[routes/api.js]
+    subgraph Server [Node.js + Express + Prisma + PostgreSQL]
+        AuthRouter[routes/auth.js]
+        APIRouter[routes/api.js]
+        Middleware[config/authMiddleware.js]
         
         subgraph Services
             Parser[AIBillParser.js]
@@ -39,34 +43,59 @@ graph TD
             Insights[InsightsService.js]
         end
         
-        DB[(dev.db SQLite)]
+        DB[(PostgreSQL Database)]
         Config[config/emission-factors.js]
     end
 
-    UI -- API Requests --> Router
-    Router --> Services
+    UI -- OAuth / Auth Request --> AuthRouter
+    UI -- Secure API Requests --> APIRouter
+    APIRouter --> Middleware
+    Middleware --> Services
     Services --> DB
     Services --> Config
 ```
 
-- **`/server/routes/api.js`**: Main HTTP routing layer.
-- **`/server/services/`**: Isolated core logic (AIBillParser, GeocodingService, CarbonCalcService, InsightsService).
-- **`/server/config/emission-factors.js`**: The single source of truth for carbon intensities and thresholds.
-- **`/server/prisma/`**: Database persistence layer using SQLite.
+- **`/client/src/components/Auth.jsx`**: Handshakes with the Google Identity Services SDK to initialize Google One-Tap/Sign-In and manages user signup and credentials verification.
+- **`/server/routes/auth.js`**: Verifies Google tokens, registers users, hashes passwords with bcrypt, and issues JWT tokens.
+- **`/server/config/authMiddleware.js`**: Intercepts requests, validates JWT authorization tokens, and isolates database logs per active user account.
+- **`/server/routes/api.js`**: Main API routes layer, fully isolated by user ID.
+- **`/server/services/`**: Core logic (AIBillParser, GeocodingService, CarbonCalcService, InsightsService).
+- **`/server/prisma/`**: Prisma Schema mapping to PostgreSQL tables.
 
 ---
 
-## 3. Two-Command Setup
+## 3. Local Installation & Development Setup
 
-Bootstrap the entire application (database generation, seed data, server dependencies, and client builds) with two commands:
+Bootstrap the application locally with a few simple steps:
 
-1. **Install and Bootstrap**:
+1. **Install Dependencies**:
    ```bash
    npm install
    ```
-   *Note: This automatically triggers root, server, and client package installs, initializes Prisma SQLite database, pushes tables, and seeds 2 weeks of history.*
+   *This automatically installs dependencies for the root, client, and server, and compiles the Prisma Client.*
 
-2. **Launch Dev Server**:
+2. **Configure Environment Variables**:
+   Create a `.env` file in the root directory (based on `.env.example`):
+   ```env
+   # AI and API Keys
+   AI_PROVIDER=openrouter
+   AI_API_KEY=your_openrouter_or_openai_api_key
+   DEMO_MODE=false
+
+   # Database and Authentication
+   DATABASE_URL=postgresql://username:password@localhost:5432/ecotrack
+   JWT_SECRET=your_super_secret_session_key
+   GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+   ```
+
+3. **Initialize Database Tables**:
+   Push the schema to your database and seed defaults:
+   ```bash
+   npm run db:migrate
+   npm run db:seed
+   ```
+
+4. **Launch Dev Server**:
    ```bash
    npm run dev
    ```
@@ -74,7 +103,20 @@ Bootstrap the entire application (database generation, seed data, server depende
 
 ---
 
-## 4. Emission Factor Sources & Citations
+## 4. Environment variables for Vercel Deployment
+
+When deploying to Vercel, set these variables in your Vercel Project Settings:
+
+- `DATABASE_URL`: Connection string to your PostgreSQL database (e.g. Supabase, Neon).
+- `JWT_SECRET`: Secure random string for session tokens.
+- `GOOGLE_CLIENT_ID`: Your Google OAuth credentials Client ID.
+- `AI_PROVIDER`: `openrouter` (or `openai`/`gemini`).
+- `AI_API_KEY`: Your vision model API key.
+- `DEMO_MODE`: `false` (to enable live receipt parsing).
+
+---
+
+## 5. Emission Factor Sources & Citations
 
 All calculation factors are defined in `/server/config/emission-factors.js` and referenced from official environmental agencies:
 
@@ -90,15 +132,15 @@ All calculation factors are defined in `/server/config/emission-factors.js` and 
   - `packaged_food`: **2.0** (DEFRA average processing intensity).
   - `household`: **1.2** (UK DEFRA household supplies lifecycle assessments).
   - `other`: **1.5** (Global average consumer product intensity fallback).
-- **Home Energy Grid Defaults** (in kg CO₂e / kWh):
+- **Home Grid Defaults** (in kg CO₂e / kWh):
   - `US`: **0.370** (US EPA eGRID 2023 state averages).
   - `GB`: **0.150** (UK DEFRA 2023 grid emissions).
   - `IN`: **0.710** (India Central Electricity Authority carbon footprint reports).
-  - `DEFAULT` (World Average): **0.475** (International Energy Agency grid averages).
+  - `DEFAULT` (World Average): **0.475** (IEA grid averages).
 
 ---
 
-## 5. How Calculations Work
+## 6. How Calculations Work
 
 Footprints are computed as:
 $$\text{Total Footprint} = \text{Travel Emissions} + \text{Product Emissions}$$
@@ -116,47 +158,10 @@ $$\text{Product } (\text{kg CO}_2\text{e}) = \sum \left( \text{Item Quantity} \t
 
 ---
 
-## 6. API Key Setup
+## 7. Testing
 
-Configure external services in your local `.env` file (copy of `.env.example`):
-
-```env
-PORT=5000
-NODE_ENV=development
-
-# Choose: openai | gemini | anthropic
-AI_PROVIDER=gemini
-AI_API_KEY=your_vision_api_key_here
-
-# Set to true for offline / demo mode using pre-parsed fixtures
-DEMO_MODE=true
+EcoTrack has a suite of integration and unit tests covering all routes, geocoders, footprint calculators, and insights generators. To run them:
+```bash
+npm run test
 ```
-
-### Free Tiers and Limits:
-- **Gemini (Recommended)**: Gemini 1.5 Flash offers a free tier (15 RPM / 1,500 RPD) which easily fits standard tracking.
-- **OpenAI**: Requires a paid platform account with credits ($5 minimum).
-- **Anthropic**: Requires commercial console credits.
-- **Tesseract.js Fallback**: Used automatically if no API key is specified or if vision requests fail. Runs locally in-browser or on server.
-- **EcoTrack Rate Limiter**: Server limits requests to **100 calls/day** to prevent accidental bill runs.
-
----
-
-## 7. Privacy Note
-
-EcoTrack prioritizes privacy. Coordinates collected via the browser Geolocation API are sent to the local server node and reverse-geocoded using OSM Nominatim. **Coordinates are stored locally on your machine in the SQLite DB (`dev.db`) and are never uploaded to cloud trackers, advertiser APIs, or external tracking services.**
-
----
-
-## 8. Known Limitations & Submission Details
-
-### Submission Size (Under 10 MB Target)
-- The entire application source code, including documentation, configuration, and seeded database files, totals **less than 1.5 MB**.
-- **Important:** When packaging this repository for submission, make sure to delete or exclude all `node_modules` folders (`/node_modules/`, `/client/node_modules/`, `/server/node_modules/`). Running `npm install` on the target machine will regenerate all dependencies automatically.
-
-### Behavioral Limits
-1. **Averages vs. Precision**: Using categorical emission averages (e.g. general produce vs. organic avocados imported by plane) trading precision for a zero-input user experience.
-2. **errand-chaining**: The haversine formula computes a dedicated trip from home to store. It does not account for multi-stop commutes (e.g., stopping at a grocery store on the way home from work).
-3. **OCR / Vision Variance**: Low-quality images, crumpled receipts, or bad lighting can affect AI accuracy. If JSON extraction fails, the system safely falls back to Tesseract OCR keyword matching.
-4. **Single Local User**: The system is configured for a single, local developer environment.
-   - *How to scale to multi-user*: Add user authentication (e.g. Passport.js, Firebase, or JWT session tokens), relate the `Log` and `User` models using a `userId` foreign key in the Prisma schema, and filter query responses on the server by the authenticated user's ID.
-
+All tests verify route isolation, authentication token requirements, and calculations correctness.
