@@ -40,7 +40,7 @@ export default function Auth({ onAuthSuccess }) {
           { 
             theme: 'outline', 
             size: 'large', 
-            width: '100%',
+            width: 380, // Set to pixel width for full-card appearance
             text: 'signin_with',
             shape: 'rectangular'
           }
@@ -252,7 +252,7 @@ export default function Auth({ onAuthSuccess }) {
         {/* Google OAuth Button Container */}
         {googleClientId && (
           <div class="relative z-10 flex justify-center w-full">
-            <div id="googleSignInDiv" class="w-full"></div>
+            <div id="googleSignInDiv" class="flex justify-center w-full"></div>
           </div>
         )}
 
