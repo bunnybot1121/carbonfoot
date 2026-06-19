@@ -208,12 +208,6 @@ router.get('/dashboard', async (req, res) => {
     const country = user ? user.country : 'US';
     const goal = user ? user.monthlyGoal : 500.0;
 
-    // Fetch user's logs
-    const logs = await prisma.log.findMany({
-      where: { userId: req.user.id },
-      include: { items: true },
-    });
-
     const now = new Date();
     
     // Start of time periods
@@ -228,6 +222,27 @@ router.get('/dashboard', async (req, res) => {
     startOfWeek.setHours(0, 0, 0, 0);
 
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    const fourteenDaysAgo = new Date();
+    fourteenDaysAgo.setDate(now.getDate() - 14);
+    fourteenDaysAgo.setHours(0, 0, 0, 0);
+
+    // Calculate minimum boundary date to fetch logs
+    const minDate = new Date(Math.min(
+      startOfToday.getTime(),
+      startOfWeek.getTime(),
+      startOfMonth.getTime(),
+      fourteenDaysAgo.getTime()
+    ));
+
+    // Fetch user's logs within boundary timeframe to optimize performance
+    const logs = await prisma.log.findMany({
+      where: { 
+        userId: req.user.id,
+        scannedAt: { gte: minDate }
+      },
+      include: { items: true },
+    });
 
     let todayEmissions = 0.0;
     let weekEmissions = 0.0;
@@ -271,22 +286,22 @@ router.get('/dashboard', async (req, res) => {
       });
     });
 
-    // Compute trend line (last 14 days)
+    // Pre-calculate daily emission sums in a single O(N) map lookup
+    const emissionsByDateKey = {};
+    logs.forEach(log => {
+      const dateKey = new Date(log.scannedAt).toDateString();
+      emissionsByDateKey[dateKey] = (emissionsByDateKey[dateKey] || 0) + log.totalEmissions;
+    });
+
+    // Compute trend line (last 14 days) in O(1) lookups
     const trendData = [];
     for (let i = 13; i >= 0; i--) {
       const date = new Date();
       date.setDate(now.getDate() - i);
-      date.setHours(0,0,0,0);
+      date.setHours(0, 0, 0, 0);
       
-      const nextDate = new Date(date);
-      nextDate.setDate(date.getDate() + 1);
-
-      const dayLogs = logs.filter(log => {
-        const logDate = new Date(log.scannedAt);
-        return logDate >= date && logDate < nextDate;
-      });
-
-      const dayTotal = dayLogs.reduce((sum, l) => sum + l.totalEmissions, 0);
+      const dateKey = date.toDateString();
+      const dayTotal = emissionsByDateKey[dateKey] || 0.0;
       
       trendData.push({
         date: date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
@@ -295,8 +310,10 @@ router.get('/dashboard', async (req, res) => {
     }
 
     // Confidence indicator calculation
-    // More bills = higher confidence
-    const billsCount = logs.length;
+    // More bills = higher confidence - query database count directly
+    const billsCount = await prisma.log.count({
+      where: { userId: req.user.id }
+    });
     let confidence = 'Low';
     let confidenceScore = 15; // out of 100
     let confidenceReason = 'Using average baseline. Scan receipts to start personalizing.';

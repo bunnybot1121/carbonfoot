@@ -39,6 +39,9 @@ model Log {
   items            LogItem[]
   userId           String    @default("default-user")
   user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, scannedAt])
 }
 
 model LogItem {
@@ -50,4 +53,6 @@ model LogItem {
   emissions Float    // kg CO2e
   logId     String
   log       Log      @relation(fields: [logId], references: [id], onDelete: Cascade)
+
+  @@index([logId])
 }

@@ -38,81 +38,83 @@ export default function GoalTracker({ currentEmissions, targetGoal, onGoalUpdate
   };
 
   return (
-    <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm relative overflow-hidden text-slate-800">
+    <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm relative overflow-hidden text-slate-800">
       
       {/* Decorative background glow */}
-      <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl"></div>
 
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
-        <div class="flex items-center gap-3">
-          <div class="p-3 bg-emerald-50 rounded-2xl text-emerald-600 border border-emerald-100/50">
-            <Target class="w-5 h-5 animate-pulse" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+        <div className="flex items-center gap-3">
+          <div className="p-3 bg-emerald-50 rounded-2xl text-emerald-600 border border-emerald-100/50">
+            <Target className="w-5 h-5 animate-pulse" />
           </div>
           <div>
-            <h2 class="text-base font-bold text-slate-800">Monthly Target Goal</h2>
-            <p class="text-[11px] text-slate-400 mt-0.5">
+            <h2 className="text-base font-bold text-slate-800">Monthly Target Goal</h2>
+            <p className="text-[11px] text-slate-400 mt-0.5">
               Keep your total monthly emissions below your target limit.
             </p>
           </div>
         </div>
 
         {/* Incremental Target Adjusters (Stepper, No Typing Needed!) */}
-        <div class="bg-slate-50 border border-slate-100 p-1.5 rounded-2xl flex items-center gap-3">
-          <span class="text-slate-400 text-xs font-semibold pl-2 select-none">Goal:</span>
-          <div class="flex items-center gap-1.5">
+        <div className="bg-slate-50 border border-slate-100 p-1.5 rounded-2xl flex items-center gap-3">
+          <span className="text-slate-400 text-xs font-semibold pl-2 select-none">Goal:</span>
+          <div className="flex items-center gap-1.5">
             <button
               onClick={() => adjustGoal(-50)}
               disabled={updating || targetGoal <= 50}
-              class="p-1 bg-white border border-slate-200 hover:border-slate-300 active:bg-slate-100 text-slate-500 hover:text-slate-800 rounded-lg disabled:opacity-30 transition-all"
+              className="p-1 bg-white border border-slate-200 hover:border-slate-300 active:bg-slate-100 text-slate-500 hover:text-slate-800 rounded-lg disabled:opacity-30 transition-all"
               title="Decrease Goal"
+              aria-label="Decrease Goal"
             >
-              <ChevronDown class="w-3.5 h-3.5" />
+              <ChevronDown className="w-3.5 h-3.5" />
             </button>
-            <span class="text-xs font-black text-slate-800 w-12 text-center font-display">
+            <span className="text-xs font-black text-slate-800 w-12 text-center font-display">
               {targetGoal} kg
             </span>
             <button
               onClick={() => adjustGoal(50)}
               disabled={updating}
-              class="p-1 bg-white border border-slate-200 hover:border-slate-300 active:bg-slate-100 text-slate-500 hover:text-slate-800 rounded-lg disabled:opacity-30 transition-all"
+              className="p-1 bg-white border border-slate-200 hover:border-slate-300 active:bg-slate-100 text-slate-500 hover:text-slate-800 rounded-lg disabled:opacity-30 transition-all"
               title="Increase Goal"
+              aria-label="Increase Goal"
             >
-              <ChevronUp class="w-3.5 h-3.5" />
+              <ChevronUp className="w-3.5 h-3.5" />
             </button>
           </div>
 
           {success && (
-            <span class="text-emerald-500 flex items-center pr-2 transition-opacity">
-              <CheckCircle class="w-4 h-4 fill-emerald-50 animate-bounce" />
+            <span className="text-emerald-500 flex items-center pr-2 transition-opacity">
+              <CheckCircle className="w-4 h-4 fill-emerald-50 animate-bounce" />
             </span>
           )}
         </div>
       </div>
 
       {/* Progress representation */}
-      <div class="space-y-2.5">
-        <div class="flex justify-between text-xs font-semibold">
-          <span class="text-slate-500">
-            Current Usage: <strong class="text-slate-800 font-bold">{currentEmissions.toFixed(1)} kg</strong>
+      <div className="space-y-2.5">
+        <div className="flex justify-between text-xs font-semibold">
+          <span className="text-slate-500">
+            Current Usage: <strong className="text-slate-800 font-bold">{currentEmissions.toFixed(1)} kg</strong>
           </span>
-          <span class={getTextColor()}>
+          <span className={getTextColor()}>
             {percentage.toFixed(0)}% Utilized
           </span>
         </div>
 
         {/* Progress tracks */}
-        <div class="w-full h-3 bg-slate-100 border border-slate-200/50 rounded-full overflow-hidden p-0.5">
+        <div className="w-full h-3 bg-slate-100 border border-slate-200/50 rounded-full overflow-hidden p-0.5">
           <div 
-            class={`h-full rounded-full transition-all duration-700 ${getProgressColor()}`}
+            className={`h-full rounded-full transition-all duration-700 ${getProgressColor()}`}
             style={{ width: `${percentage}%` }}
           ></div>
         </div>
 
-        <div class="flex items-center justify-between text-[9px] text-slate-400 font-bold uppercase tracking-wider px-1">
+        <div className="flex items-center justify-between text-[9px] text-slate-400 font-bold uppercase tracking-wider px-1">
           <span>0 kg (Zero-Emissions)</span>
           {percentage >= 90 && (
-            <span class="text-red-500 flex items-center gap-1 animate-pulse">
-              <Flame class="w-3 h-3 fill-red-50" /> Target limit breached!
+            <span className="text-red-500 flex items-center gap-1 animate-pulse">
+              <Flame className="w-3 h-3 fill-red-50" /> Target limit breached!
             </span>
           )}
           <span>Goal: {targetGoal} kg</span>

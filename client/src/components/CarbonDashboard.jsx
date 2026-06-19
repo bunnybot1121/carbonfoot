@@ -3,7 +3,7 @@ import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid 
 } from 'recharts';
 import { 
-  Car, Utensils, Zap, ShoppingBag, ArrowUpRight, 
+  Car, Utensils, Zap, ShoppingBag, 
   Leaf, Info, ChevronRight 
 } from 'lucide-react';
 import BillScanner from './BillScanner';
@@ -72,36 +72,36 @@ export default function CarbonDashboard({ data, insights, onScanComplete }) {
   const kwh_saved = thisMonth > 0 ? Math.round(saved_kg / electricityFactor) : 0;
 
   return (
-    <div class="space-y-4 animate-fadeIn text-slate-800">
+    <div className="space-y-4 animate-fadeIn text-slate-800">
       
       {/* 1. Dashboard Header Section */}
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
-          <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight font-display">
+          <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight font-display">
             Welcome back! 👋
           </h2>
-          <p class="text-xs text-slate-500 mt-1 font-medium">
+          <p className="text-xs text-slate-500 mt-1 font-medium">
             Here's your carbon footprint summary.
           </p>
         </div>
 
         {/* Dynamic leaf congratulations banner */}
-        <div class="bg-emerald-50/70 border border-emerald-100/50 rounded-2xl p-2.5 flex items-center gap-3 max-w-sm shadow-sm">
-          <div class="bg-emerald-500/10 p-2 rounded-xl text-emerald-600 border border-emerald-500/20 shrink-0">
-            <Leaf class="w-5 h-5 animate-pulse" />
+        <div className="bg-emerald-50/70 border border-emerald-100/50 rounded-2xl p-2.5 flex items-center gap-3 max-w-sm shadow-sm">
+          <div className="bg-emerald-500/10 p-2 rounded-xl text-emerald-600 border border-emerald-500/20 shrink-0">
+            <Leaf className="w-5 h-5 animate-pulse" />
           </div>
           <div>
-            <h4 class="font-bold text-emerald-800 text-[10px] uppercase tracking-wider">
+            <h4 className="font-bold text-emerald-800 text-[10px] uppercase tracking-wider">
               {thisMonth > 0 ? "Emissions Reduced!" : "Get Started!"}
             </h4>
-            <p class="text-[10px] text-emerald-700 leading-snug mt-0.5">
+            <p className="text-[10px] text-emerald-700 leading-snug mt-0.5">
               {thisMonth > 0 ? (
                 <>
-                  You've kept your footprint <strong class="font-black text-emerald-800">{saved_kg.toFixed(0)} kg CO₂e</strong> below baseline. Keep it up! 🍀
+                  You've kept your footprint <strong className="font-black text-emerald-800">{saved_kg.toFixed(0)} kg CO₂e</strong> below baseline. Keep it up! 🍀
                 </>
               ) : (
                 <>
-                  Scan a receipt below with <strong class="font-black text-emerald-800">zero manual entry</strong> to personalize your score. 🍀
+                  Scan a receipt below with <strong className="font-black text-emerald-800">zero manual entry</strong> to personalize your score. 🍀
                 </>
               )}
             </p>
@@ -110,24 +110,31 @@ export default function CarbonDashboard({ data, insights, onScanComplete }) {
       </div>
 
       {/* 2. Main Executive Grid Layout */}
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
         
         {/* Column 1: Score & Breakdown (Lg 4) */}
-        <div class="lg:col-span-4 flex flex-col gap-4">
+        <div className="lg:col-span-4 flex flex-col gap-4">
           
           {/* Your Carbon Score Card */}
-          <div class="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm flex flex-col justify-between h-[215px]">
-            <div class="flex items-center justify-between">
-              <h3 class="font-bold text-slate-800 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+          <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm flex flex-col justify-between h-[215px]">
+            <div className="flex items-center justify-between">
+              <h3 className="font-bold text-slate-800 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
                 Your Carbon Score
-                <Info class="w-3.5 h-3.5 text-slate-400 cursor-pointer" />
+                <Info className="w-3.5 h-3.5 text-slate-400 cursor-pointer" />
               </h3>
             </div>
 
-            <div class="flex items-center gap-4 my-auto">
+            <div className="flex items-center gap-4 my-auto">
               {/* SVG Circle Gauge */}
-              <div class="w-20 h-20 relative shrink-0">
-                <svg class="w-full h-full transform -rotate-90">
+              <div 
+                className="w-20 h-20 relative shrink-0"
+                role="progressbar"
+                aria-valuenow={score}
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-label={`Carbon Score: ${score} out of 100`}
+              >
+                <svg className="w-full h-full transform -rotate-90">
                   <circle
                     cx="40"
                     cy="40"
@@ -146,25 +153,25 @@ export default function CarbonDashboard({ data, insights, onScanComplete }) {
                     strokeDasharray={circumference}
                     strokeDashoffset={strokeDashoffset}
                     strokeLinecap="round"
-                    class="transition-all duration-700"
+                    className="transition-all duration-700"
                   />
                 </svg>
                 {/* Score label text inside */}
-                <div class="absolute inset-0 flex flex-col items-center justify-center">
-                  <span class="text-xl font-black text-slate-800 font-display">{score}</span>
-                  <span class="text-[8px] text-slate-400 uppercase tracking-widest font-bold">/ 100</span>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-xl font-black text-slate-800 font-display">{score}</span>
+                  <span className="text-[8px] text-slate-400 uppercase tracking-widest font-bold">/ 100</span>
                 </div>
               </div>
 
               {/* Score Text details */}
-              <div class="text-left space-y-1">
-                <span class="text-[9px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
+              <div className="text-left space-y-1">
+                <span className="text-[9px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
                   {thisMonth > 0 ? "Good job!" : "Eco Starter"}
                 </span>
-                <p class="text-[10px] text-slate-500 leading-snug">
+                <p className="text-[10px] text-slate-500 leading-snug">
                   {thisMonth > 0 ? (
                     <>
-                      You're doing better than <strong class="text-slate-800 font-bold">{Math.min(99, Math.max(10, Math.round(100 - (thisMonth / monthlyGoal) * 50)))}%</strong> of local users.
+                      You're doing better than <strong className="text-slate-800 font-bold">{Math.min(99, Math.max(10, Math.round(100 - (thisMonth / monthlyGoal) * 50)))}%</strong> of local users.
                     </>
                   ) : (
                     "Scan receipts to personalize your score compared to your region."
@@ -173,105 +180,105 @@ export default function CarbonDashboard({ data, insights, onScanComplete }) {
               </div>
             </div>
 
-            <button class="w-full py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-700 text-[10px] font-bold rounded-xl flex items-center justify-center gap-1 transition-all border border-slate-100">
-              View Score Details <ChevronRight class="w-3.5 h-3.5" />
+            <button className="w-full py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-700 text-[10px] font-bold rounded-xl flex items-center justify-center gap-1 transition-all border border-slate-100">
+              View Score Details <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
           {/* Emissions Breakdown Card */}
-          <div class="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm flex flex-col justify-between h-[260px]">
-            <div class="flex items-center justify-between">
-              <h3 class="font-bold text-slate-800 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+          <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm flex flex-col justify-between h-[260px]">
+            <div className="flex items-center justify-between">
+              <h3 className="font-bold text-slate-800 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
                 Emissions Breakdown
-                <Info class="w-3.5 h-3.5 text-slate-400 cursor-pointer" />
+                <Info className="w-3.5 h-3.5 text-slate-400 cursor-pointer" />
               </h3>
-              <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider bg-slate-50 border border-slate-200/50 px-2 py-0.5 rounded-lg">
+              <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider bg-slate-50 border border-slate-200/50 px-2 py-0.5 rounded-lg">
                 This Month
               </span>
             </div>
 
             {/* Breakdown Items List */}
-            <div class="space-y-2.5 my-auto">
+            <div className="space-y-2.5 my-auto">
               {/* Transport */}
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <div class="p-1 bg-emerald-50 rounded-lg text-emerald-600 border border-emerald-100">
-                    <Car class="w-3.5 h-3.5" />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-1 bg-emerald-50 rounded-lg text-emerald-600 border border-emerald-100">
+                    <Car className="w-3.5 h-3.5" />
                   </div>
-                  <span class="text-[11px] font-bold text-slate-700">Transport</span>
+                  <span className="text-[11px] font-bold text-slate-700">Transport</span>
                 </div>
-                <div class="text-right">
-                  <span class="text-[11px] font-black text-slate-800">{transport_pct}%</span>
-                  <span class="text-[9px] text-slate-400 font-medium block">{transport_kg.toFixed(0)} kg CO₂e</span>
+                <div className="text-right">
+                  <span className="text-[11px] font-black text-slate-800">{transport_pct}%</span>
+                  <span className="text-[9px] text-slate-400 font-medium block">{transport_kg.toFixed(0)} kg CO₂e</span>
                 </div>
               </div>
 
               {/* Food */}
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <div class="p-1 bg-orange-50 rounded-lg text-orange-600 border border-orange-100">
-                    <Utensils class="w-3.5 h-3.5" />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-1 bg-orange-50 rounded-lg text-orange-600 border border-orange-100">
+                    <Utensils className="w-3.5 h-3.5" />
                   </div>
-                  <span class="text-[11px] font-bold text-slate-700">Food</span>
+                  <span className="text-[11px] font-bold text-slate-700">Food</span>
                 </div>
-                <div class="text-right">
-                  <span class="text-[11px] font-black text-slate-800">{food_pct}%</span>
-                  <span class="text-[9px] text-slate-400 font-medium block">{food_kg.toFixed(0)} kg CO₂e</span>
+                <div className="text-right">
+                  <span className="text-[11px] font-black text-slate-800">{food_pct}%</span>
+                  <span className="text-[9px] text-slate-400 font-medium block">{food_kg.toFixed(0)} kg CO₂e</span>
                 </div>
               </div>
 
               {/* Home Energy */}
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <div class="p-1 bg-blue-50 rounded-lg text-blue-600 border border-blue-100">
-                    <Zap class="w-3.5 h-3.5" />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-1 bg-blue-50 rounded-lg text-blue-600 border border-blue-100">
+                    <Zap className="w-3.5 h-3.5" />
                   </div>
-                  <span class="text-[11px] font-bold text-slate-700">Home Energy</span>
+                  <span className="text-[11px] font-bold text-slate-700">Home Energy</span>
                 </div>
-                <div class="text-right">
-                  <span class="text-[11px] font-black text-slate-800">{home_pct}%</span>
-                  <span class="text-[9px] text-slate-400 font-medium block">{home_kg.toFixed(0)} kg CO₂e</span>
+                <div className="text-right">
+                  <span className="text-[11px] font-black text-slate-800">{home_pct}%</span>
+                  <span className="text-[9px] text-slate-400 font-medium block">{home_kg.toFixed(0)} kg CO₂e</span>
                 </div>
               </div>
 
               {/* Shopping */}
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <div class="p-1 bg-purple-50 rounded-lg text-purple-600 border border-purple-100">
-                    <ShoppingBag class="w-3.5 h-3.5" />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-1 bg-purple-50 rounded-lg text-purple-600 border border-purple-100">
+                    <ShoppingBag className="w-3.5 h-3.5" />
                   </div>
-                  <span class="text-[11px] font-bold text-slate-700">Shopping</span>
+                  <span className="text-[11px] font-bold text-slate-700">Shopping</span>
                 </div>
-                <div class="text-right">
-                  <span class="text-[11px] font-black text-slate-800">{shopping_pct}%</span>
-                  <span class="text-[9px] text-slate-400 font-medium block">{shopping_kg.toFixed(0)} kg CO₂e</span>
+                <div className="text-right">
+                  <span className="text-[11px] font-black text-slate-800">{shopping_pct}%</span>
+                  <span className="text-[9px] text-slate-400 font-medium block">{shopping_kg.toFixed(0)} kg CO₂e</span>
                 </div>
               </div>
             </div>
 
-            <button class="w-full py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-700 text-[10px] font-bold rounded-xl flex items-center justify-center gap-1 transition-all border border-slate-100">
-              View Full Breakdown <ChevronRight class="w-3.5 h-3.5" />
+            <button className="w-full py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-700 text-[10px] font-bold rounded-xl flex items-center justify-center gap-1 transition-all border border-slate-100">
+              View Full Breakdown <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
         </div>
 
         {/* Column 2: Chart & AI Coach (Lg 5) */}
-        <div class="lg:col-span-5 flex flex-col gap-4">
+        <div className="lg:col-span-5 flex flex-col gap-4">
           
           {/* Trend Chart Card */}
-          <div class="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm flex flex-col justify-between h-[270px]">
-            <div class="flex items-center justify-between mb-2">
-              <h3 class="font-bold text-slate-800 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+          <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm flex flex-col justify-between h-[270px]">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="font-bold text-slate-800 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
                 Carbon Trend
-                <Info class="w-3.5 h-3.5 text-slate-400 cursor-pointer" />
+                <Info className="w-3.5 h-3.5 text-slate-400 cursor-pointer" />
               </h3>
-              <span class="text-[8px] text-slate-400 font-bold uppercase bg-slate-50 border border-slate-200/50 px-2 py-0.5 rounded-lg">
+              <span className="text-[8px] text-slate-400 font-bold uppercase bg-slate-50 border border-slate-200/50 px-2 py-0.5 rounded-lg">
                 Daily
               </span>
             </div>
 
-            <div class="h-32 flex-1">
+            <div className="h-32 flex-1">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={trendData} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
                   <defs>
@@ -315,11 +322,11 @@ export default function CarbonDashboard({ data, insights, onScanComplete }) {
               </ResponsiveContainer>
             </div>
 
-            <div class="bg-emerald-50/50 border border-emerald-100/30 rounded-xl p-2 flex items-center gap-2 mt-2 shadow-sm text-left">
-              <Leaf class="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-              <p class="text-[9px] text-emerald-800 leading-snug">
+            <div className="bg-emerald-50/50 border border-emerald-100/30 rounded-xl p-2 flex items-center gap-2 mt-2 shadow-sm text-left">
+              <Leaf className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+              <p className="text-[9px] text-emerald-800 leading-snug">
                 {thisMonth > 0 ? (
-                  <>Your daily emissions average decreased by <strong class="font-extrabold text-emerald-950">12%</strong>.</>
+                  <>Your daily emissions average decreased by <strong className="font-extrabold text-emerald-950">12%</strong>.</>
                 ) : (
                   <>No logs scanned. Chart will activate upon first upload.</>
                 )}
@@ -328,89 +335,89 @@ export default function CarbonDashboard({ data, insights, onScanComplete }) {
           </div>
 
           {/* AI Eco Coach Card */}
-          <div class="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm flex flex-col justify-between h-[205px]">
+          <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm flex flex-col justify-between h-[205px]">
             <div>
-              <div class="flex items-center justify-between mb-2">
-                <h3 class="font-bold text-slate-800 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="font-bold text-slate-800 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
                   AI Eco Coach
-                  <span class="text-[8px] font-black text-orange-500 bg-orange-50 px-2 py-0.5 rounded-full border border-orange-100 uppercase tracking-widest">
+                  <span className="text-[8px] font-black text-orange-500 bg-orange-50 px-2 py-0.5 rounded-full border border-orange-100 uppercase tracking-widest">
                     Active
                   </span>
                 </h3>
               </div>
 
-              <div class="flex gap-3 items-start py-1">
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0 text-xl">
+              <div className="flex gap-3 items-start py-1">
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0 text-xl">
                   🤖
                 </div>
-                <div class="text-left space-y-0.5">
+                <div className="text-left space-y-0.5">
                   {thisMonth > 0 ? (
                     <>
-                      <p class="text-[10px] text-slate-700 font-medium">
-                        Main source: <strong class="text-slate-900">{mainSource}</strong>
+                      <p className="text-[10px] text-slate-700 font-medium">
+                        Main source: <strong className="text-slate-900">{mainSource}</strong>
                       </p>
-                      <p class="text-[10px] text-emerald-600 font-bold">
+                      <p className="text-[10px] text-emerald-600 font-bold">
                         Potential saving: {topInsight.savings.toFixed(0)} kg CO₂e / month
                       </p>
                     </>
                   ) : (
-                    <p class="text-[10px] text-slate-700 font-medium">
+                    <p className="text-[10px] text-slate-700 font-medium">
                       Upload your first receipt to customize AI advice.
                     </p>
                   )}
                 </div>
               </div>
 
-              <div class="bg-slate-50 border border-slate-100 rounded-xl p-2.5 text-left space-y-0.5 mt-1.5">
-                <span class="text-[8px] font-black text-emerald-600 uppercase tracking-wider block">
+              <div className="bg-slate-50 border border-slate-100 rounded-xl p-2.5 text-left space-y-0.5 mt-1.5">
+                <span className="text-[8px] font-black text-emerald-600 uppercase tracking-wider block">
                   🌱 Suggested Action
                 </span>
-                <p class="text-[10px] text-slate-600 leading-snug">
+                <p className="text-[10px] text-slate-600 leading-snug">
                   {thisMonth > 0 ? topInsight.description : "Your AI Eco Coach will suggest actions once you log purchases."}
                 </p>
               </div>
             </div>
 
-            <button class="w-full py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-700 text-[10px] font-bold rounded-xl flex items-center justify-center gap-1 transition-all border border-slate-100">
-              View Recommendations <ChevronRight class="w-3.5 h-3.5" />
+            <button className="w-full py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-700 text-[10px] font-bold rounded-xl flex items-center justify-center gap-1 transition-all border border-slate-100">
+              View Recommendations <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
         </div>
 
         {/* Column 3: Upload & Stats Stack (Lg 3) */}
-        <div class="lg:col-span-3 flex flex-col gap-4">
+        <div className="lg:col-span-3 flex flex-col gap-4">
           
           {/* Upload Receipt Card (BillScanner inside) */}
-          <div class="flex-1">
+          <div className="flex-1">
             <BillScanner onScanComplete={onScanComplete} />
           </div>
 
           {/* Stats Stack Card */}
-          <div class="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm flex flex-col justify-between h-[205px] text-left">
-            <h3 class="font-bold text-slate-800 text-[11px] uppercase tracking-wider mb-2">Saved Highlights</h3>
+          <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm flex flex-col justify-between h-[205px] text-left">
+            <h3 className="font-bold text-slate-800 text-[11px] uppercase tracking-wider mb-2">Saved Highlights</h3>
             
-            <div class="flex items-center gap-3">
-              <span class="text-xl">🌳</span>
+            <div className="flex items-center gap-3">
+              <span className="text-xl">🌳</span>
               <div>
-                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider block leading-none">Carbon Saved</span>
-                <span class="text-sm font-black text-slate-800 font-display">{saved_kg.toFixed(1)} kg CO₂e</span>
+                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block leading-none">Carbon Saved</span>
+                <span className="text-sm font-black text-slate-800 font-display">{saved_kg.toFixed(1)} kg CO₂e</span>
               </div>
             </div>
 
-            <div class="flex items-center gap-3">
-              <span class="text-xl">🚗</span>
+            <div className="flex items-center gap-3">
+              <span className="text-xl">🚗</span>
               <div>
-                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider block leading-none">Miles Avoided</span>
-                <span class="text-sm font-black text-slate-800 font-display">{miles_saved} miles</span>
+                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block leading-none">Miles Avoided</span>
+                <span className="text-sm font-black text-slate-800 font-display">{miles_saved} miles</span>
               </div>
             </div>
 
-            <div class="flex items-center gap-3">
-              <span class="text-xl">⚡</span>
+            <div className="flex items-center gap-3">
+              <span className="text-xl">⚡</span>
               <div>
-                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider block leading-none">Energy Saved</span>
-                <span class="text-sm font-black text-slate-800 font-display">{kwh_saved} kWh</span>
+                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block leading-none">Energy Saved</span>
+                <span className="text-sm font-black text-slate-800 font-display">{kwh_saved} kWh</span>
               </div>
             </div>
           </div>

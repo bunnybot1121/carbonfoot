@@ -134,13 +134,13 @@ export default function BillScanner({ onScanComplete }) {
   };
 
   return (
-    <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm relative overflow-hidden text-slate-800">
+    <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm relative overflow-hidden text-slate-800">
       
       {/* Glow highlight */}
-      <div class="absolute -top-20 -right-20 w-40 h-40 bg-emerald-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute -top-20 -right-20 w-40 h-40 bg-emerald-500/5 rounded-full blur-3xl"></div>
 
-      <h2 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
-        <FileText class="w-4 h-4 text-emerald-500" />
+      <h2 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+        <FileText className="w-4 h-4 text-emerald-500" />
         Upload Receipt
       </h2>
 
@@ -151,34 +151,35 @@ export default function BillScanner({ onScanComplete }) {
             onDragOver={handleDragOver}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current.click()}
-            class="border-2 border-dashed border-slate-200 hover:border-emerald-500/50 rounded-2xl p-8 text-center cursor-pointer transition-all bg-slate-50/50 hover:bg-slate-50 group relative"
+            className="border-2 border-dashed border-slate-200 hover:border-emerald-500/50 rounded-2xl p-8 text-center cursor-pointer transition-all bg-slate-50/50 hover:bg-slate-50 group relative"
           >
             <input
               type="file"
               ref={fileInputRef}
               onChange={handleFileChange}
-              class="hidden"
+              className="hidden"
               accept="image/*"
+              aria-label="Upload receipt image"
             />
             {preview ? (
-              <div class="relative max-h-48 flex justify-center overflow-hidden rounded-xl">
-                <img src={preview} alt="Receipt preview" class="object-contain max-h-48 opacity-90" />
-                <div class="absolute inset-0 bg-slate-900/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Upload class="w-8 h-8 text-white drop-shadow" />
+              <div className="relative max-h-48 flex justify-center overflow-hidden rounded-xl">
+                <img src={preview} alt="Receipt preview" className="object-contain max-h-48 opacity-90" />
+                <div className="absolute inset-0 bg-slate-900/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Upload className="w-8 h-8 text-white drop-shadow" />
                 </div>
               </div>
             ) : (
-              <div class="flex flex-col items-center justify-center py-6">
-                <div class="p-3 bg-emerald-50 rounded-2xl text-emerald-500 mb-3 border border-emerald-100/50 group-hover:scale-105 transition-transform">
-                  <Upload class="w-7 h-7" />
+              <div className="flex flex-col items-center justify-center py-6">
+                <div className="p-3 bg-emerald-50 rounded-2xl text-emerald-500 mb-3 border border-emerald-100/50 group-hover:scale-105 transition-transform">
+                  <Upload className="w-7 h-7" />
                 </div>
-                <p class="text-slate-700 font-bold text-xs mb-1">
+                <p className="text-slate-700 font-bold text-xs mb-1">
                   Drag & drop your receipt here
                 </p>
-                <p class="text-slate-400 text-[10px]">
-                  or click to <span class="text-emerald-600 font-bold">browse</span>
+                <p className="text-slate-400 text-[10px]">
+                  or click to <span className="text-emerald-600 font-bold">browse</span>
                 </p>
-                <p class="text-slate-400 text-[9px] mt-2">
+                <p className="text-slate-400 text-[9px] mt-2">
                   Supports JPG, PNG, PDF (Max 5MB)
                 </p>
               </div>
@@ -189,16 +190,16 @@ export default function BillScanner({ onScanComplete }) {
             <button
               onClick={startParse}
               disabled={parsing}
-              class="w-full mt-4 py-3 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 transition-all text-xs"
+              className="w-full mt-4 py-3 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 transition-all text-xs"
             >
               {parsing ? (
                 <>
-                  <RefreshCw class="w-4 h-4 animate-spin" />
+                  <RefreshCw className="w-4 h-4 animate-spin" />
                   We're analyzing and estimating...
                 </>
               ) : (
                 <>
-                  <ShoppingBag class="w-4 h-4" />
+                  <ShoppingBag className="w-4 h-4" />
                   Upload & Analyze Receipt
                 </>
               )}
@@ -207,19 +208,19 @@ export default function BillScanner({ onScanComplete }) {
         </div>
       ) : (
         /* Receipt Verification & Chips Editing */
-        <div class="space-y-5 animate-fadeIn">
+        <div className="space-y-5 animate-fadeIn">
           {/* Shop Header */}
-          <div class="bg-slate-50 border border-slate-100 rounded-2xl p-4 flex flex-col gap-3">
+          <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 flex flex-col gap-3">
             <div>
-              <h3 class="text-slate-800 font-extrabold text-sm">{parsedData.shopName}</h3>
-              <p class="text-slate-400 text-[10px] flex items-center gap-1 mt-0.5 font-medium">
-                <MapPin class="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+              <h3 className="text-slate-800 font-extrabold text-sm">{parsedData.shopName}</h3>
+              <p className="text-slate-400 text-[10px] flex items-center gap-1 mt-0.5 font-medium">
+                <MapPin className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
                 {parsedData.shopAddress || 'Address Unknown'}
               </p>
             </div>
             
             {/* Travel mode chips */}
-            <div class="bg-white p-1 rounded-xl border border-slate-100 flex flex-wrap gap-1">
+            <div className="bg-white p-1 rounded-xl border border-slate-100 flex flex-wrap gap-1">
               {TRAVEL_MODES.map((mode) => {
                 const isSelected = parsedData.travelMode === mode.value;
                 const Icon = mode.icon;
@@ -227,13 +228,13 @@ export default function BillScanner({ onScanComplete }) {
                   <button
                     key={mode.value}
                     onClick={() => handleTravelModeChange(mode.value)}
-                    class={`py-1 px-2.5 rounded-lg text-[10px] font-bold flex items-center gap-1 transition-all ${
+                    className={`py-1 px-2.5 rounded-lg text-[10px] font-bold flex items-center gap-1 transition-all ${
                       isSelected
                         ? 'bg-emerald-600 text-white shadow-sm'
                         : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
                     }`}
                   >
-                    <Icon class="w-3 h-3" />
+                    <Icon className="w-3 h-3" />
                     {mode.label.split(' ')[1]}
                   </button>
                 );
@@ -242,44 +243,46 @@ export default function BillScanner({ onScanComplete }) {
           </div>
 
           {/* Travel warning / verification indicator */}
-          <div class="text-[10px] text-slate-500 bg-slate-50 p-2.5 border border-slate-100 rounded-xl flex items-center justify-between">
-            <span class="flex items-center gap-1">
-              🚗 Travel Distance: <strong class="text-slate-800">{parsedData.distance} km</strong>
+          <div className="text-[10px] text-slate-500 bg-slate-50 p-2.5 border border-slate-100 rounded-xl flex items-center justify-between">
+            <span className="flex items-center gap-1">
+              🚗 Travel Distance: <strong className="text-slate-800">{parsedData.distance} km</strong>
             </span>
-            <span class="text-slate-400 font-medium">
+            <span className="text-slate-400 font-medium">
               Inferred from coords
             </span>
           </div>
 
           {/* Items checklist */}
-          <div class="space-y-2">
-            <div class="flex items-center justify-between text-[10px] text-slate-400 font-bold px-1 uppercase tracking-wider">
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-[10px] text-slate-400 font-bold px-1 uppercase tracking-wider">
               <span>Items ({parsedData.items.length})</span>
               <span>Category / Qty</span>
             </div>
 
-            <div class="max-h-48 overflow-y-auto pr-1 space-y-2">
+            <div className="max-h-48 overflow-y-auto pr-1 space-y-2">
               {parsedData.items.map((item, index) => (
                 <div
                   key={index}
-                  class="bg-slate-50 border border-slate-100 rounded-xl p-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs group"
+                  className="bg-slate-50 border border-slate-100 rounded-xl p-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs group"
                 >
                   <input
                     type="text"
                     value={item.name}
                     onChange={(e) => handleItemChange(index, 'name', e.target.value)}
-                    class="bg-transparent text-slate-800 font-bold focus:outline-none focus:border-b focus:border-emerald-500 pb-0.5 truncate flex-1"
+                    className="bg-transparent text-slate-800 font-bold focus:outline-none focus:border-b focus:border-emerald-500 pb-0.5 truncate flex-1"
+                    aria-label="Item name"
                   />
 
                   {/* Chips controller */}
-                  <div class="flex items-center gap-1.5 flex-wrap">
+                  <div className="flex items-center gap-1.5 flex-wrap">
                     {/* Category Selector */}
                     <select
                       value={item.category}
                       onChange={(e) => handleItemChange(index, 'category', e.target.value)}
-                      class={`text-[10px] px-2 py-0.5 rounded-full border bg-white font-bold cursor-pointer focus:outline-none ${
+                      className={`text-[10px] px-2 py-0.5 rounded-full border bg-white font-bold cursor-pointer focus:outline-none ${
                         CATEGORIES.find(c => c.value === item.category)?.color || 'border-slate-200 text-slate-400'
                       }`}
+                      aria-label="Select product category"
                     >
                       {CATEGORIES.map(c => (
                         <option key={c.value} value={c.value}>
@@ -289,19 +292,21 @@ export default function BillScanner({ onScanComplete }) {
                     </select>
 
                     {/* Quantity Chip Control (no typing required) */}
-                    <div class="flex items-center bg-white border border-slate-200 rounded-full py-0.5 px-1.5">
+                    <div className="flex items-center bg-white border border-slate-200 rounded-full py-0.5 px-1.5">
                       <button
                         onClick={() => handleItemChange(index, 'quantity', Math.max(0.1, parseFloat((item.quantity - 0.1).toFixed(1))))}
-                        class="text-slate-400 hover:text-slate-800 font-black px-0.5 text-[10px]"
+                        className="text-slate-400 hover:text-slate-800 font-black px-0.5 text-[10px]"
+                        aria-label="Decrease quantity"
                       >
                         -
                       </button>
-                      <span class="text-slate-700 text-[10px] px-1 font-extrabold">
+                      <span className="text-slate-700 text-[10px] px-1 font-extrabold">
                         {item.quantity}
                       </span>
                       <button
                         onClick={() => handleItemChange(index, 'quantity', parseFloat((item.quantity + 0.1).toFixed(1)))}
-                        class="text-slate-400 hover:text-slate-800 font-black px-0.5 text-[10px]"
+                        className="text-slate-400 hover:text-slate-800 font-black px-0.5 text-[10px]"
+                        aria-label="Increase quantity"
                       >
                         +
                       </button>
@@ -311,7 +316,8 @@ export default function BillScanner({ onScanComplete }) {
                     <select
                       value={item.unit}
                       onChange={(e) => handleItemChange(index, 'unit', e.target.value)}
-                      class="text-[9px] bg-white border border-slate-200 rounded-lg py-0.5 px-1 text-slate-500 font-bold focus:outline-none cursor-pointer"
+                      className="text-[9px] bg-white border border-slate-200 rounded-lg py-0.5 px-1 text-slate-500 font-bold focus:outline-none cursor-pointer"
+                      aria-label="Select product unit"
                     >
                       <option value="pcs">pcs</option>
                       <option value="kg">kg</option>
@@ -321,9 +327,10 @@ export default function BillScanner({ onScanComplete }) {
                     {/* Delete Item Button */}
                     <button
                       onClick={() => deleteItem(index)}
-                      class="p-1 text-slate-400 hover:text-red-500 transition-colors"
+                      className="p-1 text-slate-400 hover:text-red-500 transition-colors"
+                      aria-label="Delete item"
                     >
-                      <Trash2 class="w-3.5 h-3.5" />
+                      <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
@@ -332,33 +339,33 @@ export default function BillScanner({ onScanComplete }) {
 
             <button
               onClick={addItem}
-              class="w-full py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-700 font-bold text-[10px] rounded-xl flex items-center justify-center gap-1 transition-all"
+              className="w-full py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-700 font-bold text-[10px] rounded-xl flex items-center justify-center gap-1 transition-all"
             >
-              <Plus class="w-3 h-3" /> Add Product
+              <Plus className="w-3 h-3" /> Add Product
             </button>
           </div>
 
           {/* Action buttons */}
-          <div class="flex gap-2 pt-1.5">
+          <div className="flex gap-2 pt-1.5">
             <button
               onClick={() => setParsedData(null)}
-              class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition-all text-xs"
+              className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition-all text-xs"
             >
               Clear
             </button>
             <button
               onClick={saveLog}
               disabled={saving}
-              class="flex-2 w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-bold rounded-xl shadow-sm flex items-center justify-center gap-1.5 transition-all text-xs"
+              className="flex-2 w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-bold rounded-xl shadow-sm flex items-center justify-center gap-1.5 transition-all text-xs"
             >
               {saving ? (
                 <>
-                  <RefreshCw class="w-3.5 h-3.5 animate-spin" />
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                   Saving...
                 </>
               ) : (
                 <>
-                  <Check class="w-3.5 h-3.5" />
+                  <Check className="w-3.5 h-3.5" />
                   Confirm & Save
                 </>
               )}
@@ -368,8 +375,8 @@ export default function BillScanner({ onScanComplete }) {
       )}
 
       {error && (
-        <div class="mt-3 p-3 bg-red-50 border border-red-100 rounded-xl text-red-700 text-[10px] flex gap-1.5 items-start">
-          <AlertTriangle class="w-3.5 h-3.5 shrink-0 text-red-500 mt-0.5" />
+        <div className="mt-3 p-3 bg-red-50 border border-red-100 rounded-xl text-red-700 text-[10px] flex gap-1.5 items-start">
+          <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-red-500 mt-0.5" />
           <span>{error}</span>
         </div>
       )}

@@ -102,34 +102,34 @@ export default function Auth({ onAuthSuccess }) {
   };
 
   return (
-    <div class="flex-1 flex items-center justify-center p-4 min-h-[80vh] bg-slate-50">
-      <div class="max-w-md w-full glass rounded-3xl p-8 border border-slate-200/50 shadow-2xl relative overflow-hidden bg-white/85">
+    <div className="flex-1 flex items-center justify-center p-4 min-h-[80vh] bg-slate-50">
+      <div className="max-w-md w-full glass rounded-3xl p-8 border border-slate-200/50 shadow-2xl relative overflow-hidden bg-white/85">
         
         {/* Decorative background glow */}
-        <div class="absolute -top-24 -left-24 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl"></div>
-        <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-teal-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute -top-24 -left-24 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-teal-500/5 rounded-full blur-3xl"></div>
 
         {/* Logo and Header */}
-        <div class="text-center relative z-10 mb-6">
-          <div class="inline-flex items-center justify-center p-4 bg-emerald-50 rounded-2xl text-emerald-600 mb-4 border border-emerald-100/50 shadow-sm">
-            <Leaf class="w-8 h-8 animate-pulse" />
+        <div className="text-center relative z-10 mb-6">
+          <div className="inline-flex items-center justify-center p-4 bg-emerald-50 rounded-2xl text-emerald-600 mb-4 border border-emerald-100/50 shadow-sm">
+            <Leaf className="w-8 h-8 animate-pulse" />
           </div>
-          <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 font-display">
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 font-display">
             EcoTrack
           </h1>
-          <p class="text-slate-400 text-xs mt-1 font-semibold uppercase tracking-wider">
+          <p className="text-slate-400 text-xs mt-1 font-semibold uppercase tracking-wider">
             Zero-Effort Carbon Footprint Tracking
           </p>
         </div>
 
         {/* Authentication Switch Tabs */}
-        <div class="flex bg-slate-100 p-1.5 rounded-2xl border border-slate-200/50 relative z-10 mb-6">
+        <div className="flex bg-slate-100 p-1.5 rounded-2xl border border-slate-200/50 relative z-10 mb-6">
           <button
             onClick={() => {
               setIsLogin(true);
               setError(null);
             }}
-            class={`flex-1 py-2 text-center text-xs font-bold rounded-xl transition-all ${
+            className={`flex-1 py-2 text-center text-xs font-bold rounded-xl transition-all ${
               isLogin 
                 ? 'bg-white text-slate-800 shadow-md font-extrabold' 
                 : 'text-slate-500 hover:text-slate-700'
@@ -142,7 +142,7 @@ export default function Auth({ onAuthSuccess }) {
               setIsLogin(false);
               setError(null);
             }}
-            class={`flex-1 py-2 text-center text-xs font-bold rounded-xl transition-all ${
+            className={`flex-1 py-2 text-center text-xs font-bold rounded-xl transition-all ${
               !isLogin 
                 ? 'bg-white text-slate-800 shadow-md font-extrabold' 
                 : 'text-slate-500 hover:text-slate-700'
@@ -154,68 +154,71 @@ export default function Auth({ onAuthSuccess }) {
 
         {/* Error Notification */}
         {error && (
-          <div class="p-4 bg-red-50 border border-red-100 rounded-2xl text-red-700 text-xs flex gap-2.5 items-start text-left mb-5 relative z-10">
-            <AlertCircle class="w-5 h-5 shrink-0 text-red-500" />
+          <div className="p-4 bg-red-50 border border-red-100 rounded-2xl text-red-700 text-xs flex gap-2.5 items-start text-left mb-5 relative z-10">
+            <AlertCircle className="w-5 h-5 shrink-0 text-red-500" />
             <div>
-              <span class="font-bold">Error:</span> {error}
+              <span className="font-bold">Error:</span> {error}
             </div>
           </div>
         )}
 
         {/* Auth form */}
-        <form onSubmit={handleSubmit} class="space-y-4 relative z-10 text-left">
+        <form onSubmit={handleSubmit} className="space-y-4 relative z-10 text-left">
           
           {/* Name Field (Register Mode Only) */}
           {!isLogin && (
-            <div class="space-y-1.5">
-              <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Full Name</label>
-              <div class="relative">
-                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                  <User class="w-4 h-4" />
+            <div className="space-y-1.5">
+              <label htmlFor="authNameField" className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Full Name</label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                  <User className="w-4 h-4" />
                 </span>
                 <input
+                  id="authNameField"
                   type="text"
                   placeholder="John Doe"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:border-emerald-500 focus:bg-white rounded-xl focus:outline-none transition-all text-xs font-semibold text-slate-800 shadow-sm"
+                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:border-emerald-500 focus:bg-white rounded-xl focus:outline-none transition-all text-xs font-semibold text-slate-800 shadow-sm"
                 />
               </div>
             </div>
           )}
 
           {/* Email Field */}
-          <div class="space-y-1.5">
-            <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Email Address</label>
-            <div class="relative">
-              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                <Mail class="w-4 h-4" />
+          <div className="space-y-1.5">
+            <label htmlFor="authEmailField" className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Email Address</label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                <Mail className="w-4 h-4" />
               </span>
               <input
+                id="authEmailField"
                 type="email"
                 placeholder="your.email@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:border-emerald-500 focus:bg-white rounded-xl focus:outline-none transition-all text-xs font-semibold text-slate-800 shadow-sm"
+                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:border-emerald-500 focus:bg-white rounded-xl focus:outline-none transition-all text-xs font-semibold text-slate-800 shadow-sm"
               />
             </div>
           </div>
 
           {/* Password Field */}
-          <div class="space-y-1.5">
-            <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Password</label>
-            <div class="relative">
-              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                <Lock class="w-4 h-4" />
+          <div className="space-y-1.5">
+            <label htmlFor="authPasswordField" className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Password</label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                <Lock className="w-4 h-4" />
               </span>
               <input
+                id="authPasswordField"
                 type="password"
                 placeholder="••••••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:border-emerald-500 focus:bg-white rounded-xl focus:outline-none transition-all text-xs font-semibold text-slate-800 shadow-sm"
+                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:border-emerald-500 focus:bg-white rounded-xl focus:outline-none transition-all text-xs font-semibold text-slate-800 shadow-sm"
               />
             </div>
           </div>
@@ -224,11 +227,11 @@ export default function Auth({ onAuthSuccess }) {
           <button
             type="submit"
             disabled={loading}
-            class="w-full mt-2 py-3.5 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-bold rounded-2xl flex items-center justify-center gap-1.5 transition-all text-xs shadow-md shadow-emerald-600/10 hover:shadow-emerald-600/20"
+            className="w-full mt-2 py-3.5 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-bold rounded-2xl flex items-center justify-center gap-1.5 transition-all text-xs shadow-md shadow-emerald-600/10 hover:shadow-emerald-600/20"
           >
             {loading ? (
               <>
-                <RefreshCw class="w-4 h-4 animate-spin" />
+                <RefreshCw className="w-4 h-4 animate-spin" />
                 Processing...
               </>
             ) : (
@@ -239,11 +242,11 @@ export default function Auth({ onAuthSuccess }) {
 
         {/* Divider */}
         {googleClientId && (
-          <div class="relative my-6 z-10 flex items-center justify-center">
-            <div class="absolute inset-0 flex items-center">
-              <div class="w-full border-t border-slate-200"></div>
+          <div className="relative my-6 z-10 flex items-center justify-center">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-200"></div>
             </div>
-            <span class="relative px-3 text-[10px] text-slate-400 bg-white font-black uppercase tracking-wider">
+            <span className="relative px-3 text-[10px] text-slate-400 bg-white font-black uppercase tracking-wider">
               Or continue with
             </span>
           </div>
@@ -251,8 +254,8 @@ export default function Auth({ onAuthSuccess }) {
 
         {/* Google OAuth Button Container */}
         {googleClientId && (
-          <div class="relative z-10 flex justify-center w-full">
-            <div id="googleSignInDiv" class="flex justify-center w-full"></div>
+          <div className="relative z-10 flex justify-center w-full">
+            <div id="googleSignInDiv" className="flex justify-center w-full"></div>
           </div>
         )}
 
