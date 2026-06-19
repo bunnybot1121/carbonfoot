@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "EcoTrack - Track your carbon footprint automatically",
   "private": true,
+  "type": "module",
   "scripts": {
     "postinstall": "npm run install:server && npm run install:client && npx prisma generate --schema=server/prisma/schema.prisma",
     "install:server": "npm install --prefix server",
