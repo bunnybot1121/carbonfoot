@@ -1,0 +1,20 @@
+{
+  "name": "ecotrack",
+  "version": "1.0.0",
+  "description": "EcoTrack - Track your carbon footprint automatically",
+  "private": true,
+  "scripts": {
+    "postinstall": "npm run install:server && npm run install:client && npm run db:generate --prefix server",
+    "install:server": "npm install --prefix server",
+    "install:client": "npm install --prefix client",
+    "db:generate": "npm run db:generate --prefix server",
+    "db:migrate": "npm run db:push --prefix server",
+    "db:seed": "npm run db:seed --prefix server",
+    "build": "npm run build --prefix client",
+    "dev": "concurrently -n \"server,client\" -c \"cyan,magenta\" \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "test": "npm run test --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

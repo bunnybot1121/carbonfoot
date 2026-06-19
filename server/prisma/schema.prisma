@@ -1,0 +1,52 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  password    String?  // Made optional to support passwordless Google login
+  name        String?
+  homeLat     Float?
+  homeLng     Float?
+  country     String   @default("US")
+  monthlyGoal Float    @default(500.0) // Monthly carbon target in kg CO2e
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  logs        Log[]
+}
+
+model Log {
+  id               String    @id @default(uuid())
+  shopName         String
+  shopAddress      String?
+  shopLat          Float?
+  shopLng          Float?
+  distance         Float?    // distance from home in km
+  travelMode       String?   // "walking" | "cycling" | "transit" | "car" | "flight"
+  travelEmissions  Float     @default(0.0) // kg CO2e
+  productEmissions Float     @default(0.0) // kg CO2e
+  totalEmissions   Float     @default(0.0) // kg CO2e
+  rawResponse      String?   // Raw parsed AI output or OCR output
+  scannedAt        DateTime  @default(now())
+  createdAt        DateTime  @default(now())
+  items            LogItem[]
+  userId           String    @default("default-user")
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model LogItem {
+  id        String   @id @default(uuid())
+  name      String
+  category  String   // "meat" | "dairy" | "produce" | "packaged_food" | "household" | "other"
+  quantity  Float    @default(1.0)
+  unit      String   @default("pcs")
+  emissions Float    // kg CO2e
+  logId     String
+  log       Log      @relation(fields: [logId], references: [id], onDelete: Cascade)
+}
